@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+:root {
+  --dark-gray: #1a2a32;
+  --gray: #2e4756;
+  --player1-color: #3cc4bf;
+  --player2-color: #f2b147;
+  --light-gray: #d3d3d3;
+  --light-gray--transparent: #d3d3d30d;
+  --light-gray--transparent--hover: #d3d3d312;
+}
+
+* {
+  font-family: 'Montserrat', sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: none;
+  list-style: none;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: var(--dark-gray);
+}
+
+body {
+  padding: 90px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+button:hover {
+  cursor: pointer;
+  opacity: 90%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.player1 {
+  color: var(--player1-color);
+}
+
+.player2 {
+  color: var(--player2-color);
+}
+
+.shadow {
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.border {
+  border: 1px solid rgba(211, 211, 211, 0.4) !important;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: 50px repeat(3, 80px) 60px;
+  gap: 5px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    width: 490px;
+    grid-template-columns: repeat(3, 150px);
+    grid-template-rows: 50px repeat(3, 150px) 60px;
+    gap: 20px;
+  }
+}
+
+.turn {
+  display: flex;
+  align-items: center;
+  /* align-self: center; */
+  grid-column-start: 1;
+  grid-column-end: 3;
+  gap: 20px;
+}
+
+@keyframes turn-text-animation {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 100%;
+    transform: translateX(0);
+  }
+}
+
+.turn p {
+  font-size: 14px;
+  animation: 0.6s ease-in-out turn-text-animation;
+}
+
+@keyframes turn-icon-animation {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.turn i {
+  margin-left: 10px;
+  font-size: 1.8rem;
+  animation: 0.6s ease-in-out turn-icon-animation;
+}
+
+.menu {
+  position: relative;
+}
+
+.menu-btn {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: white;
+  background-color: var(--light-gray--transparent);
+  border: 1px solid transparent;
+  border-radius: 10px;
+}
+
+.menu-btn:focus,
+.menu-btn:hover {
+  background-color: var(--light-gray--transparent--hover);
+}
+
+.items {
+  position: absolute;
+  z-index: 1;
+  top: 60px;
+  right: 0;
+  padding: 10px;
+  background-color: #203139;
+  border-radius: 2px;
+}
+
+.items button {
+  padding: 8px;
+  color: white;
+  background-color: transparent;
+}
+
+.items button:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  background-color: var(--gray);
+  border-radius: 10px;
+}
+
+.square:hover {
+  cursor: pointer;
+  opacity: 70%;
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.score p {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.score span {
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.score--player1 {
+  background-color: var(--player1-color);
+}
+
+.score--ties {
+  background-color: var(--light-gray);
+}
+
+.score--player2 {
+  background-color: var(--player2-color);
+}
+
+footer {
+  margin-top: 50px;
+  color: white;
+}
+
+footer p {
+  margin-top: 10px;
+  text-align: center;
+}
+
+footer a {
+  color: var(--yellow);
+}
+
+.modal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-contents {
+  /* transform: translateY(-80px); */
+  width: 100%;
+  max-width: 300px;
+  height: 150px;
+  margin: 10px;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: #2a4544;
+  border-radius: 20px;
+}
+
+.modal-contents button {
+  padding: 10px;
+  color: #2a4544;
+  background-color: var(--player1-color);
+  border-radius: 3px;
+}
