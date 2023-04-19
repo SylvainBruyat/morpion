@@ -1,4 +1,6 @@
-const initialStateValue = {
+import type { DerivedStats, GameState, Player, SaveStateCb } from './types';
+
+const initialStateValue: GameState = {
   currentGameMoves: [],
   history: {
     currentRoundGames: [],
@@ -7,13 +9,11 @@ const initialStateValue = {
 };
 
 export default class Store extends EventTarget {
-  constructor(key, players) {
+  constructor(private readonly storageKey: string, private readonly players: Player[]) {
     super();
-    this.storageKey = key;
-    this.players = players;
   }
 
-  get stats() {
+  get stats(): DerivedStats {
     const state = this.#getState();
     return {
       playersWithStats: this.players.map((player) => {
@@ -63,7 +63,7 @@ export default class Store extends EventTarget {
     };
   }
 
-  playerMove(squareId) {
+  playerMove(squareId: number) {
     const stateClone = structuredClone(this.#getState());
 
     stateClone.currentGameMoves.push({
@@ -88,7 +88,7 @@ export default class Store extends EventTarget {
 
   newRound() {
     this.reset();
-    const stateClone = structuredClone(this.#getState());
+    const stateClone = structuredClone(this.#getState()) as GameState;
     stateClone.history.allGames.push(...stateClone.history.currentRoundGames);
     stateClone.history.currentRoundGames = [];
     this.#setState(stateClone);
@@ -96,10 +96,10 @@ export default class Store extends EventTarget {
 
   #getState() {
     const storedState = window.localStorage.getItem(this.storageKey);
-    return storedState ? JSON.parse(storedState) : initialStateValue;
+    return storedState ? (JSON.parse(storedState) as GameState) : initialStateValue;
   }
 
-  #setState(stateOrFn) {
+  #setState(stateOrFn: GameState | SaveStateCb) {
     const previousState = this.#getState();
     let newState;
 

@@ -1,6 +1,8 @@
+import type { DerivedStats, Game, Move, Player } from './types';
+
 export default class View {
-  $ = {};
-  $$ = {};
+  $: Record<string, Element> = {};
+  $$: Record<string, NodeListOf<Element>> = {};
 
   constructor() {
     this.$.menu = this.#selectElement('[data-id="menu"]');
@@ -24,7 +26,7 @@ export default class View {
     });
   }
 
-  render(game, stats) {
+  render(game: Game, stats: DerivedStats) {
     const {
       moves,
       currentPlayer,
@@ -48,26 +50,26 @@ export default class View {
     this.#setTurnIndicator(currentPlayer);
   }
 
-  bindGameResetEvent(handler) {
+  bindGameResetEvent(handler: EventListener) {
     this.$.resetButton.addEventListener('click', handler);
     this.$.modalButton.addEventListener('click', handler);
   }
 
-  bindNewRoundEvent(handler) {
+  bindNewRoundEvent(handler: EventListener) {
     this.$.newRoundButton.addEventListener('click', handler);
   }
 
-  bindPlayerMoveEvent(handler) {
+  bindPlayerMoveEvent(handler: (el: Element) => void) {
     this.#delegate(this.$.grid, '[data-id="square"]', 'click', handler);
   }
 
-  #handlePlayerMove(squareEl, player) {
+  #handlePlayerMove(squareEl: Element, player: Player) {
     const icon = document.createElement('i');
     icon.classList.add('fa-solid', player.iconClass, player.colorClass);
     squareEl.replaceChildren(icon);
   }
 
-  #setTurnIndicator(player) {
+  #setTurnIndicator(player: Player) {
     const icon = document.createElement('i');
     const label = document.createElement('p');
 
@@ -84,27 +86,27 @@ export default class View {
     });
   }
 
-  #initializeMoves(moves) {
+  #initializeMoves(moves: Move[]) {
     this.$$.squares.forEach((square) => {
       const existingMove = moves.find((move) => move.squareId === +square.id);
       if (existingMove) this.#handlePlayerMove(square, existingMove.player);
     });
   }
 
-  #updateScoreboard(p1Wins, p2Wins, ties) {
+  #updateScoreboard(p1Wins: number, p2Wins: number, ties: number) {
     this.$.p1Wins.textContent = `${p1Wins} victoire(s)`;
     this.$.p2Wins.textContent = `${p2Wins} victoire(s)`;
-    this.$.ties.textContent = ties;
+    this.$.ties.textContent = `${ties} matchs nuls`;
   }
 
-  #selectElement(selector, parent) {
+  #selectElement(selector: string, parent?: Element) {
     const el = parent ? parent.querySelector(selector) : document.querySelector(selector);
     if (!el) throw new Error('Could not find a game element');
 
     return el;
   }
 
-  #selectAllElement(selector) {
+  #selectAllElement(selector: string) {
     const elList = document.querySelectorAll(selector);
     if (!elList) throw new Error('Could not find game elements');
 
@@ -115,7 +117,7 @@ export default class View {
     this.$.menuItems.classList.toggle('hidden');
     this.$.menuButton.classList.toggle('border');
 
-    const icon = this.$.menuButton.querySelector('i');
+    const icon = this.#selectElement('i', this.$.menuButton);
     icon.classList.toggle('fa-chevron-up');
     icon.classList.toggle('fa-chevron-down');
   }
@@ -124,12 +126,12 @@ export default class View {
     this.$.menuItems.classList.add('hidden');
     this.$.menuButton.classList.remove('border');
 
-    const icon = this.$.menuButton.querySelector('i');
+    const icon = this.#selectElement('i', this.$.menuButton);
     icon.classList.remove('fa-chevron-up');
     icon.classList.add('fa-chevron-down');
   }
 
-  #openModal(message) {
+  #openModal(message: string) {
     this.$.modalText.textContent = message;
     this.$.modal.classList.remove('hidden');
   }
@@ -143,8 +145,11 @@ export default class View {
     this.#closeMenu();
   }
 
-  #delegate(el, selector, eventKey, handler) {
+  #delegate(el: Element, selector: string, eventKey: string, handler: (el: Element) => void) {
     el.addEventListener(eventKey, (evt) => {
+      if (!(evt.target instanceof Element)) {
+        throw new Error('Event target not found!')!;
+      }
       if (evt.target.matches(selector)) handler(evt.target);
     });
   }
